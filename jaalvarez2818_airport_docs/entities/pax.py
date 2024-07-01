@@ -5,11 +5,13 @@ class Pax:
 
     def __init__(self, first_name: str, second_name: str, last_name: str, gender: str, birth_date: str,
                  nationality_code: str, document_type: str, document_number: str, document_expiry_date: str,
-                 document_issuer_code: str, flight_class: str, origin_code: str, destination_code: str):
+                 document_issuer_code: str, flight_class: str, origin_code: str, destination_code: str,
+                 reservation_code: str):
         self.first_name = first_name.strip().upper()
         self.second_name = second_name.strip().upper()
         self.last_name = last_name.strip().upper()
         self.gender = gender.strip().upper()
+        self.reservation_code = reservation_code.strip().upper()
 
         try:
             self.birth_date = datetime.datetime.strptime(birth_date.strip(), '%Y-%m-%d')
