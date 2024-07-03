@@ -2,7 +2,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='jaalvarez2818_airport_docs',
-    version='0.7',
+    version='0.8.1',
     packages=find_packages(),
     install_requires=[],
     url='https://github.com/jaalvarez2818/airport-docs',

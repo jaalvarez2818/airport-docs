@@ -1,9 +1,7 @@
 import datetime
 import io
-from collections import defaultdict
 from typing import List
 
-from jaalvarez2818_airport_docs.normalize import short_date, short_date_without_year, keep_alphanumeric
 from jaalvarez2818_airport_docs.entities import ContactInfo
 from jaalvarez2818_airport_docs.entities import Pax
 from jaalvarez2818_airport_docs.entities import Flight
@@ -12,13 +10,15 @@ from jaalvarez2818_airport_docs.entities import Flight
 class API:
     version = 4
 
-    def __init__(self, contact_info: ContactInfo, pax_list: List[Pax], flight: Flight, split_doc_limit: int = 58):
-        self.filename = None
+    def __init__(self, contact_info: ContactInfo, pax_list: List[Pax], flight: Flight, is_pre_api=True):
         self.contact_info = contact_info
         self.flight = flight
         self.pax_list = pax_list
         self.lines = []
         self.current = datetime.datetime.now()
+        self.is_pre_api = is_pre_api
+        prefix = ('API', 'PRE-API')[self.is_pre_api]
+        self.filename = f"{prefix}-PAX-{self.flight.flight_number}-{self.flight.departure_airport_code}{self.flight.arrival_airport_code}-{format(self.flight.local_departure_date, '%y%m%d')}.edi"
 
     def generate(self):
 
@@ -68,11 +68,13 @@ class API:
         ]
 
     def to_edi(self):
-        self.generate()
-        self.filename = f"API-PAX-{self.flight.flight_number}-{self.flight.departure_airport_code}{self.flight.arrival_airport_code}-{format(self.flight.local_departure_date, '%y%m%d')}.edi"
-        content = '\n'.join(self.lines)
+        content = self.get_edi()
 
         output = io.StringIO()
         output.write(content)
         output.seek(0)
         return output
+
+    def get_edi(self):
+        self.generate()
+        return '\n'.join(self.lines)

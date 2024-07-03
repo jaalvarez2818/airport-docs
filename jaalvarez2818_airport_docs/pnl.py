@@ -11,12 +11,12 @@ from jaalvarez2818_airport_docs.entities import Flight
 class PNL:
 
     def __init__(self, contact_info: ContactInfo, pax_list: List[Pax], flight: Flight, split_doc_limit: int = 58):
-        self.filename = None
         self.lines = ['PNL']
         self.contact_info = contact_info
         self.flight = flight
         self.pax_list = pax_list
         self.split_doc_limit = split_doc_limit
+        self.filename = f"PNL_{self.flight.flight_number}_{format(self.flight.local_departure_date, '%y%m%d')}_{self.flight.departure_airport_code}.txt"
 
     def generate(self):
         grouped_list = self.get_grouped()
@@ -83,11 +83,13 @@ class PNL:
         return dict(grouped_objects)
 
     def to_txt(self):
-        self.generate()
-        self.filename = f"PNL_{self.flight.flight_number}_{format(self.flight.local_departure_date, '%y%m%d')}_{self.flight.departure_airport_code}.txt"
-        content = '\n'.join(self.lines)
+        content = self.get_content()
 
         output = io.StringIO()
         output.write(content)
         output.seek(0)
         return output
+
+    def get_content(self):
+        self.generate()
+        return '\n'.join(self.lines)
