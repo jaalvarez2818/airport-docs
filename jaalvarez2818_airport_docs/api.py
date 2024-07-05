@@ -18,7 +18,7 @@ class API:
         self.current = datetime.datetime.now()
         self.is_pre_api = is_pre_api
         prefix = ('API', 'PreAPI')[self.is_pre_api]
-        self.filename = f"{prefix}-PAX-{self.flight.flight_number}-{self.flight.departure_airport_code}{self.flight.arrival_airport_code}-{format(self.flight.local_departure_date, '%y%m%d')}.edi"
+        self.filename = f"{prefix}-PAX-{self.flight.flight_number}-{self.flight.departure_airport_code}{self.flight.arrival_airport_code}-{format(self.flight.local_departure_date, '%Y%m%d')}.edi"
 
     def generate(self):
 
