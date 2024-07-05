@@ -10,13 +10,16 @@ from jaalvarez2818_airport_docs.entities import Flight
 
 class PNL:
 
-    def __init__(self, contact_info: ContactInfo, pax_list: List[Pax], flight: Flight, split_doc_limit: int = 58):
-        self.lines = ['PNL']
+    def __init__(self, contact_info: ContactInfo, pax_list: List[Pax], flight: Flight, split_doc_limit: int = 58,
+                 is_adl: bool = False):
+        self.prefix = ('PNL', 'ADL')[is_adl]
+        self.lines = [self.prefix]
         self.contact_info = contact_info
         self.flight = flight
         self.pax_list = pax_list
         self.split_doc_limit = split_doc_limit
-        self.filename = f"PNL_{self.flight.flight_number}_{format(self.flight.local_departure_date, '%y%m%d')}_{self.flight.departure_airport_code}.txt"
+        self.is_adl = is_adl
+        self.filename = f"{self.prefix}_{self.flight.flight_number}_{format(self.flight.local_departure_date, '%y%m%d')}_{self.flight.departure_airport_code}.txt"
 
     def generate(self):
         grouped_list = self.get_grouped()
@@ -24,7 +27,7 @@ class PNL:
         for index, (destination_code, pax_list) in enumerate(grouped_list.items()):
             self.lines += self.get_part(index + 1, destination_code, pax_list)
 
-        self.lines += ['ENDPNL']
+        self.lines += [f'END{self.prefix}']
 
     def get_part(self, part_number, destination_code, pax_list):
         part = [] if part_number == 1 else ['']
